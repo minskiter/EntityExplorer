@@ -232,7 +232,7 @@ export default {
                             null,
                             4
                         )}</pre>
-                        <button class="clipboard" style="outline:none; display: inline-block;width: 100px;outline: none;background: transparent;border: 1px solid #30336b;border-radius: 5px;padding: 5px;" data-clipboard-text="${dataString}" >Copy</button>
+                        <button class="clipboard chart_copy_button" data-clipboard-text="${dataString}" >Copy</button>
                         `;
                     },
                 },
@@ -245,13 +245,13 @@ export default {
                         bottom: "1%",
                         right: "20%",
 
-                        symbolSize: 18,
+                        symbolSize: 12,
 
                         label: {
                             position: "left",
                             verticalAlign: "middle",
                             align: "right",
-                            fontSize: 20,
+                            fontSize: 18,
                         },
 
                         leaves: {
@@ -338,6 +338,23 @@ export default {
     &:not(:nth-child(1)) {
         margin-left: 10px;
     }
+    &:hover {
+        border: 1px solid gray;
+        cursor: pointer;
+        opacity: 0.9;
+    }
+}
+</style>
+
+<style lang="scss">
+.chart_copy_button {
+    display: inline-block;
+    width: 100px;
+    outline: none;
+    background: transparent;
+    border: 1px solid #30336b;
+    border-radius: 5px;
+    padding: 5px;
     &:hover {
         border: 1px solid gray;
         cursor: pointer;
