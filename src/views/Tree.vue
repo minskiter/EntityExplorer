@@ -44,16 +44,37 @@
             </div>
         </div>
         <div>
-            <canvas ref="chart" class="chart" width="1920" height="1080" />
+            <v-chart :option="options" class="chart" autoresize />
         </div>
     </div>
 </template>
 
 <script>
-import * as echarts from "echarts";
+import { use } from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { TreeChart } from "echarts/charts";
+import {
+    TitleComponent,
+    TooltipComponent,
+    LegendComponent,
+} from "echarts/components";
+import VChart from "vue-echarts";
 import "echarts/lib/component/tooltip"; // you need to import the tooltip component
+import ClipboardJS from "clipboard";
+
+use([
+    CanvasRenderer,
+    TreeChart,
+    TitleComponent,
+    TooltipComponent,
+    LegendComponent,
+]);
+
 export default {
     name: "VueTree",
+    components: {
+        VChart,
+    },
     data() {
         return {
             chart: null,
@@ -65,11 +86,15 @@ export default {
             },
             i2eText: null,
             e2iText: null,
+            options: {},
+            initOptions: {},
         };
     },
-    mounted() {
+    beforeMount() {
         // Init Empty Data
-        this.initEchart([]);
+        this.initEchart();
+        // Init Clipboard
+        this.btn = new ClipboardJS(".clipboard");
     },
     methods: {
         /**
@@ -157,7 +182,12 @@ export default {
                     edges[nextId][id] = true;
                 }
             }
-            let tree = { id: 0, name: i2e[0].name, children: [] };
+            let tree = {
+                id: 0,
+                name: i2e[0].name,
+                origin: i2e[0],
+                children: [],
+            };
             let vis = new Set();
             vis.add("0");
             let queue = [tree];
@@ -171,6 +201,7 @@ export default {
                         let node = {
                             id: next,
                             name,
+                            origin: i2e[next],
                             children: [],
                         };
                         queue.push(node);
@@ -185,17 +216,24 @@ export default {
          * @param {object} tree data
          */
         initEchart(data) {
-            if (!this.chart) {
-                this.chart = echarts.init(this.$refs.chart);
-                this.chart.hideLoading();
-            }
-            this.chart.setOption({
+            if (!data) return;
+            this.options = {
                 tooltip: {
                     trigger: "item",
-                    triggerOn: "mousemove",
-                    formatter(params) {
-                        console.log(params);
-                        return "test";
+                    triggerOn: "click",
+                    formatter: (params) => {
+                        let data = params.data.origin;
+                        let dataString = JSON.stringify(data).replaceAll(
+                            '"',
+                            "&quot;"
+                        );
+                        return `<pre style="max-width:360px;overflow:auto;word-break:break-all;">${JSON.stringify(
+                            data,
+                            null,
+                            4
+                        )}</pre>
+                        <button class="clipboard" style="outline:none; display: inline-block;width: 100px;outline: none;background: transparent;border: 1px solid #30336b;border-radius: 5px;padding: 5px;" data-clipboard-text="${dataString}" >Copy</button>
+                        `;
                     },
                 },
                 series: [
@@ -203,17 +241,17 @@ export default {
                         type: "tree",
                         data: [data],
                         top: "1%",
-                        left: "7%",
+                        left: "14%",
                         bottom: "1%",
                         right: "20%",
 
-                        symbolSize: 14,
+                        symbolSize: 18,
 
                         label: {
                             position: "left",
                             verticalAlign: "middle",
                             align: "right",
-                            fontSize: 18,
+                            fontSize: 20,
                         },
 
                         leaves: {
@@ -233,8 +271,14 @@ export default {
                         animationDurationUpdate: 750,
                     },
                 ],
-            });
+            };
+            console.log(JSON.stringify(this.options));
         },
+    },
+    beforeUnmount() {
+        if (this.btn) {
+            this.btn.destory();
+        }
     },
 };
 </script>
@@ -247,12 +291,15 @@ export default {
     height: 100vh;
 }
 .panel {
+    max-width: 400px;
     padding: 10px;
     div:not(:nth-child(1)) {
         margin-top: 10px;
     }
 }
 .chart {
+    // min-width: 1024px;
+    min-width: calc(100vw - 400px);
     width: 100%;
 }
 .textarea {
@@ -275,9 +322,10 @@ export default {
     border-bottom: 1px solid #30336b;
     font-size: 14px;
     padding: 4px;
-    border-radius: 3px;
+    border-radius: 0px;
     outline: none;
     margin-top: 5px;
+    margin-left: 10px;
 }
 .button {
     display: inline-block;
