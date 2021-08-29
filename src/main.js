@@ -26,7 +26,6 @@ use([
 ])
 
 
-
 const app = createApp(App)
 app.component('v-chart', ECharts)
 app.use(store).use(router).mount('#app')

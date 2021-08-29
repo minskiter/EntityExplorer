@@ -2,9 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    name:"Tree",
-    path:"",
-    component:()=>import("@/views/Tree.vue")
+    name: "Tree",
+    path: "",
+    component: () => import("@/views/Tree.vue")
+  },
+  {
+    name: "Editor",
+    path: "/editor",
+    component: () => import("@/views/Editor.vue")
   }
 ]
 
