@@ -100,18 +100,18 @@ const IdxNode = Node.create({
               let div = document.createElement("div");
               div.classList.add("node-info")
               let position = view.coordsAtPos(pos)
-              div.style.left = `${position.left + 2}px`
+
+              div.style.left = `${Math.min(position.left + 2, window.innerWidth - 500)}px`
               div.style.top = `${position.top + 42}px`
               // create best node
               let text = node.attrs.text.replace(' ', '');
-              let rex = new RegExp(text,"ig")
               for (let bestnode of node.attrs.node_info.bestnode) {
                 if (node.attrs.node_info.i2e[bestnode] != undefined) {
                   let child = document.createElement("div")
                   child.classList.add("node")
                   let entity = node.attrs.node_info.i2e[bestnode]
-                  let name = "["+bestnode+"] "+entity.name;
-                  child.innerHTML = `<span class="name">${name.replace(rex, `<span class="high-light">${text}</span>`)}</span>:<span class="content">${entity.context.replace(rex, `<span class="high-light">${text}</span>`)}</span>`
+                  let name = "[" + bestnode + "] " + entity.name;
+                  child.innerHTML = `<span class="name">${name.replaceAll(text, `<span class="high-light">${text}</span>`, true)}</span>:<span class="content">${entity.context.replaceAll(text, `<span class="high-light">${text}</span>`, true)}</span>`
                   div.appendChild(child)
                 }
               }

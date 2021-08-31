@@ -19,7 +19,7 @@
                 Select
             </button>
             <button class="button">ItemNo.</button>
-            <input type="text" class="button" v-model="page.cur" />
+            <input type="number" class="button" v-model="page.cur" />
         </div>
         <editor-content class="editor" :editor="editor"></editor-content>
     </div>
@@ -190,7 +190,7 @@ export default {
          * @param {number} adds
          */
         changePage(adds) {
-            this.page.cur += adds;
+            this.page.cur = parseInt(this.page.cur) + adds;
             if (this.page.cur < 0) this.page.cur = 0;
             if (this.page.cur >= this.total) this.page.cur = this.total - 1;
             this.selectItem(this.page.cur);
