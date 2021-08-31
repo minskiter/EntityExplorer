@@ -7,7 +7,7 @@ export default {
     async readFileAsString() {
       return new Promise((resolve, reject) => {
         let input = document.createElement("input")
-        input.accept = ".txt,.csv"
+        input.accept = ".txt,.csv,.json"
         input.type = "file"
         input.onchange = ({ target: { files } }) => {
           let file = files[0];

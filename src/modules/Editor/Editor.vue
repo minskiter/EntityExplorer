@@ -61,8 +61,7 @@ export default {
         dataReady() {
             if (this.idxes.length > 0) {
                 return (
-                    this.idxes.length == this.idxdicts.length &&
-                    this.idxdicts.length == this.bestnodes.length &&
+                    this.idxes.length == this.bestnodes.length &&
                     this.bestnodes.length == this.entities.length
                 );
             }
@@ -169,12 +168,10 @@ export default {
          * Read GPT2 decode
          */
         async readIdx2text() {
-            this.idxdicts = [];
-            let lines = (await this.readFileAsString()).split("\n");
-            for (let line of lines) {
-                if (line.length == 0) continue;
-                let dict = JSON.parse(line);
-                this.idxdicts.push(dict);
+            let token2id = JSON.parse(await this.readFileAsString());
+            this.idxdicts = {};
+            for (let token in token2id) {
+                this.idxdicts[token2id[token]] = token;
             }
         },
         /**
@@ -207,7 +204,7 @@ export default {
                     this.editor.commands.setContent(
                         this.generateNodes(
                             this.idxes[page],
-                            this.idxdicts[page]
+                            this.idxdicts
                         ),
                         true
                     );
@@ -223,8 +220,9 @@ export default {
         generateNodes(idxes, dict) {
             let text = [];
             for (let idx of idxes) {
+                let token = unescape(dict[idx].replace(new RegExp("[\u00a1-\u0200]",'ig'),' '))
                 text.push(
-                    `<span class="idx-node" origin="${idx}" text="${dict[idx]}">${dict[idx]}</span>`
+                    `<span class="idx-node" origin="${idx}" text="${token}">${token}</span>`
                 );
             }
             return text.join("");
@@ -305,6 +303,9 @@ export default {
             font-weight: bold;
             color: black;
             margin: 4px 0;
+            span.high-light {
+                color: white;
+            }
         }
         .content {
             display: inline-block;
@@ -314,10 +315,11 @@ export default {
             min-width: 10px;
             color: grey;
             margin: 2px 0;
+            span.high-light {
+                color: #f1c40f;
+            }
         }
     }
 }
-span.high-light {
-    color: #f1c40f;
-}
+
 </style>
