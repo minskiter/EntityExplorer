@@ -276,7 +276,7 @@ export default {
     },
     beforeUnmount() {
         if (this.btn) {
-            this.btn.destory();
+            this.btn.destroy();
         }
     },
 };

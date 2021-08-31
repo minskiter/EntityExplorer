@@ -2,8 +2,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    name: "Tree",
+    name: "Entry",
     path: "",
+    component: () => import("@/modules/Nav/nav.vue")
+  },
+  {
+    name: "Tree",
+    path: "/tree",
     component: () => import("@/modules/Tree/Tree.vue")
   },
   {
