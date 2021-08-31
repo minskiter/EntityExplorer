@@ -9,6 +9,8 @@
             <button class="button" @click="readBestNode">
                 Upload Best Node
             </button>
+            <button class="button" @click="changePage(-1)">Prev</button>
+            <button class="button" @click="changePage(1)">Next</button>
             <button
                 class="button"
                 @keyup.enter="selectItem(page.cur)"
@@ -136,6 +138,7 @@ export default {
          * Read entity from file
          */
         async readEntity() {
+            this.entities = [];
             let lines = (await this.readFileAsString()).split("\n");
             // solve lines
             for (let line of lines) {
@@ -154,6 +157,7 @@ export default {
          * Read GPT2 encoding
          */
         async readIdx() {
+            this.idxes = [];
             let lines = (await this.readFileAsString()).split("\n");
             for (let line of lines) {
                 if (line.length == 0) continue;
@@ -165,6 +169,7 @@ export default {
          * Read GPT2 decode
          */
         async readIdx2text() {
+            this.idxdicts = [];
             let lines = (await this.readFileAsString()).split("\n");
             for (let line of lines) {
                 if (line.length == 0) continue;
@@ -176,12 +181,22 @@ export default {
          * Read best node
          */
         async readBestNode() {
+            this.bestnodes = [];
             let lines = (await this.readFileAsString()).split("\n");
             for (let line of lines) {
                 if (line.length == 0) continue;
                 let bestnode = JSON.parse(line);
                 this.bestnodes.push(bestnode);
             }
+        },
+        /**
+         * @param {number} adds
+         */
+        changePage(adds) {
+            this.page.cur += adds;
+            if (this.page.cur < 0) this.page.cur = 0;
+            if (this.page.cur >= this.total) this.page.cur = this.total - 1;
+            this.selectItem(this.page.cur);
         },
         /**
          * @param {number} page
@@ -274,19 +289,35 @@ export default {
     max-width: 500px;
     max-height: 500px;
     overflow: auto;
-    padding:10px;
+    padding: 10px;
     border-radius: 10px;
     z-index: 1;
     background: whitesmoke;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15);
-    .node{
-        margin:5px;
-        .name{
-            color:#d35400;
+    .node {
+        margin: 10px 5px;
+        .name {
+            display: inline-block;
+            padding: 5px;
+            border-radius: 5px;
+            background: rgba(255, 193, 0, 1);
+            // color: #d35400;
+            font-weight: bold;
+            color: black;
+            margin: 4px 0;
+        }
+        .content {
+            display: inline-block;
+            padding: 10px;
+            border-radius: 5px;
+            background: white;
+            min-width: 10px;
+            color: grey;
+            margin: 2px 0;
         }
     }
 }
-span.high-light{
-    color:#f1c40f;
+span.high-light {
+    color: #f1c40f;
 }
 </style>

@@ -134,13 +134,13 @@ export default {
          * @summary Next line
          */
         nextLine() {
-            this.skipLine(this.cur.line + 1);
+            this.skipLine(parseInt(this.cur.line) + 1);
         },
         /**
          * @summary Prev line
          */
         prevLine() {
-            this.skipLine(this.cur.line - 1);
+            this.skipLine(parseInt(this.cur.line) - 1);
         },
         /**
          * @summary To special line
