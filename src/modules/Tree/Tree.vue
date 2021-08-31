@@ -272,7 +272,6 @@ export default {
                     },
                 ],
             };
-            console.log(JSON.stringify(this.options));
         },
     },
     beforeUnmount() {
