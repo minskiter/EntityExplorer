@@ -110,7 +110,7 @@ const IdxNode = Node.create({
                   let child = document.createElement("div")
                   child.classList.add("node")
                   let entity = node.attrs.node_info.i2e[bestnode]
-                  let name = entity.name+"["+bestnode+"]";
+                  let name = "["+bestnode+"]"+entity.name;
                   child.innerHTML = `<span class="name">${name.replace(rex, `<span class="high-light">${text}</span>`)}</span>:<span class="content">${entity.context.replace(rex, `<span class="high-light">${text}</span>`)}</span>`
                   div.appendChild(child)
                 }
